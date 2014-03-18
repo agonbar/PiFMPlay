@@ -25,7 +25,7 @@ Allow it to be run as a program:
 
 Step 3:
 Install sox and ffmpeg with:
->sudo apt-get install ffmpeg sox libsox-fmt-all 
+>sudo apt-get install sox libsox-fmt-all libav-tools
 
 Deb install:
 Download pifmplay.deb and run
