@@ -12,22 +12,24 @@ PiFMPlay is written by Mikael Jakhelln.
 This is a forked version of Mikaels PiFMPlay with solved bugs and a .deb to make it more noob friendly.
 
 ##How to use it:
-Step 1 (optional for manual install):
+Manual install:
+
+Step 1:
 Put pifmplay on your pi (e.g /home/pi).
 
-Step 2 (optional for manual install):
+Step 2:
 Allow it to be run as a program:
 >sudo chmod +x pifmplay
 
 >sudo chmod +x pifm
 
-Step 1 (.deb alternative):
-Download pifmplay.deb and run
-sudo dpkg -i pifmplay.deb
-
 Step 3:
 Install sox and ffmpeg with:
 >sudo apt-get install ffmpeg sox libsox-fmt-all 
+
+Deb install:
+Download pifmplay.deb and run
+>sudo dpkg -i pifmplay.deb
 
 Attach an antenna to GPIO4 on your raspberry pi.
 
