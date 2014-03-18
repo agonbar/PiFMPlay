@@ -9,14 +9,23 @@ PiFM is written by [Icrobotics](http://www.icrobotics.co.uk/wiki/index.php)
 PiFMPlay is written by Mikael Jakhelln.
 "It's not pretty, but i works."
 
+This is a forked version of Mikaels PiFMPlay with solved bugs and a .deb to make it more noob friendly.
+
 ##How to use it:
+Step 1 (optional for manual install):
 Put pifmplay on your pi (e.g /home/pi).
 
+Step 2 (optional for manual install):
 Allow it to be run as a program:
 >sudo chmod +x pifmplay
 
 >sudo chmod +x pifm
 
+Step 1 (.deb alternative):
+Download pifmplay.deb and run
+sudo dpkg -i pifmplay.deb
+
+Step 3:
 Install sox and ffmpeg with:
 >sudo apt-get install ffmpeg sox libsox-fmt-all 
 
@@ -24,49 +33,40 @@ Attach an antenna to GPIO4 on your raspberry pi.
 
 ###Test it:
 
->sudo sh pifmplay . 91.3
+>sudo pifmplay . 91.3
 
-(91.3 is the default frequency, change it to whatever frequency you want to broadcast on.)
+(88.0 is the default frequency, change it to whatever frequency you want to broadcast on.)
 
 ###Play a file with:
 
->sudo sh pifmplay "/path/to/file.mp3"
+>sudo pifmplay "/path/to/file.mp3"
 
->sudo sh pifmplay "/path/to/file.m4a"
+>sudo pifmplay "/path/to/file.m4a"
 
->sudo sh pifmplay "/path/to/file.wav"
+>sudo pifmplay "/path/to/file.wav"
 
 this will play a file with pifm.
 
 ###Play a folder with:
 
->sudo sh pifmplay "/path/to/folder" 101.5
+>sudo pifmplay "/path/to/folder" 101.5
 
 (this will play all files in the specified directory with pifm on frequency 101.5)
 
 ###How to Pause/Stop broadcast and skip songs:
 Open another terminal.
 
->sudo sh pifmplay pause
+>sudo pifmplay pause
 
->sudo sh pifmplay resume
+>sudo pifmplay resume
 
->sudo sh pifmplay stop
+>sudo pifmplay stop
 
->sudo sh pifmplay next
+>sudo pifmplay next
 
 To control pifmplay from the same terminal, run pifm in the background:
->sudo sh pifmplay "/path/to/folder" &
+>sudo pifmplay "/path/to/folder" &
 (tho you might want to remove the text output)
-
-Check if there is an update to pifm here: 
-[icrobotics.co.uk](http://www.icrobotics.co.uk/wiki/index.php/Turning_the_Raspberry_Pi_Into_an_FM_Transmitter)
-
-
-####Things I would like to see pifmplay do in the future:
-- Redirect all sound output to pifmplay (redirect all alsa sound output).
-- Youtube stream (might be possible with [youtube-dl](http://www.raspberrypi.org/phpBB3/viewtopic.php?p=97710))
-- di.fm/soundcloud/spotify/pandora streaming
 
 ####If you get in troube using this, IT'S ON YOU:
 The raspberry pi can be made into a powerful fm-transmitter, if you filter and amplify the signal. 
