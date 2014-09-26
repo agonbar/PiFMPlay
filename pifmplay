@@ -7,7 +7,16 @@
 # examples:
 # fmplay "../sounds/Daft punk/Daft Punk - One More Time.mp3" 91.3
 
+
 # Variables:
+#if there is a third parameter probabli using verbosity, or using this worng
+verb=false
+
+if [ "$1" = -v ]; then
+  shift
+  verb=true
+fi
+
 # if there is a second parameter, use it as frequency instead.
 if [ $# -eq 2 ]; then
   frequency=$2
@@ -18,17 +27,19 @@ fi
 
 #This is what pifmplay is asked to play, optional, you can make your own default directory
 #if [ $# -eq 0 ]; then
-#  thingtoplay=/media/yourmadeupname;
+#  thingtoplay='';
 #else
   thingtoplay=$1;
 #fi
 
 # saving the folderpath for easier use
 folderpath=`pwd`;
-# echo "you are in folder $folderpath";
+if $verb -eq true ; then
+   echo "You are in folder $folderpath";
+fi
 
-# the folder pifm is in. (Change this if not installed by my instructions)
-pifmfolder=/usr/lib;
+# the folder pifm is in. (Change this if not installed with my .deb)
+pifmfolder=/usr/local/lib;
 
 # Functions:
 pause() {
@@ -51,8 +62,9 @@ next() {
 }
 stop() {
 	# slaughers pifmplay (and everything that goes with it)
-	sudo pkill sox
+	sudo pkill pifm
 	sudo pkill pifmplay
+	sudo kill -SIGINT $$
 }
 
 start(){
@@ -62,7 +74,9 @@ start(){
 
 # Lots of different ways to play files here...
 playwav() {
-        echo "DEBUG: playwav"
+        if $verb -eq true ; then
+		echo "DEBUG: playwav"
+	 fi
 	# this wont work with most wavs, so it should be modified to decode/recode the .wav file to the correct format so pifm will accept it.
 	# .wav must be 16bit 22050khz.
 	# maybe it would work to convert it to a wav with the correct format, then feed it to pifm
@@ -75,26 +89,34 @@ playm4a() {
 }
 
 playstream() {
-  echo "DEBUG: playstream"
+  if $verb -eq true ; then
+  	echo "DEBUG: playstream"
+  fi
   #plays a stream from the internet
   #plays a bbc stream by default, since idk about any online music/sound streams. definately room for improvement here if needed ;)
-  sox -v .9 -t mp3 http://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-eieuk -t wav --input-buffer 80000 -r 22050 -c 1 - | sudo $pifmfolder/pifm - $2
+  sox -v .9 -t mp3 http://bbcwssc.ic.llnwd.net/stream/bbcwssc_mp1_ws-eieuk -t wav --input-buffer 80000 -r 22050 -c 2 - | sudo $pifmfolder/pifm - $2 22050 stereo
 }
 
 playmp3ffmpeg() {
-  echo "DEBUG: playmp3ffmpeg"
+  if $verb -eq true ; then
+    echo "DEBUG: playmp3ffmpeg"
+  fi
   # ffmpeg converts the mp3 file to a wav stream, that stream is piped to pifm, pifm then transmits it over fm-radio via gpio 4
-  avconv -i "$1" -f s16le -ar 22.05k -ac 1 - | sudo $pifmfolder/pifm - $2
+  avconv -i "$1" -f s16le -ar 22.05k -ac 2 - 2>/dev/null | sudo $pifmfolder/pifm - $2 22050 stereo
 }
 
 playmp3sox() {
-  echo "DEBUG: playmp3sox"
+  if $verb -eq true ; then
+     echo "DEBUG: playmp3sox"
+  fi
   # sox converts the mp3 file to a wav stream, that stream is piped to pifm, pifm then transmits it over fm-radio via gpio 4
-  sox -v .9 -t mp3 "$1" -t wav --input-buffer 80000 -r 22050 -c 1 - | sudo $pifmfolder/pifm - $2
+  sox -v .9 -t mp3 "$1" -t wav --input-buffer 80000 -r 22050 -c 2 - | sudo $pifmfolder/pifm - $2 22050 stereo
 }
 
 playmp3() {
-  echo "DEBUG: playmp3"
+  if $verb -eq true ; then
+     echo "DEBUG: playmp3"
+  fi
   #default is sox, just because it has less output :P
   playmp3sox "$1" $2
 }
@@ -111,9 +133,13 @@ playfile() {
 	elif echo "$1" | grep -q '.m4a$'; then
 		playm4a "$1" $2
 	elif echo "$1" | grep -q '.jpeg'; then
-		echo "An image, skipped"
+		if $verb -eq true ; then
+                    echo "An image, skipped"
+		fi
 	else
-		echo "Uhm, yeah. I probably can't play that, but i will try"
+		if $verb -eq true ; then
+		    echo "Uhm, yeah. I probably can't play that, but i will try"
+		fi
 		playmp3ffmpeg "$1" $2
 	fi
 }
@@ -130,17 +156,23 @@ playfolder() {
 
 playit() {
 	if [ -d "$1" ]; then
-		echo "DEBUG: $1 its a folder!"
+		if $verb -eq true ; then
+  		   echo "DEBUG: $1 its a folder!"
+		fi
 		# if the thing is a directory, play all files in that directory
 		playfolder "$1" $2
 	elif [ -f "$1" ]; then
-		echo "DEBUG: found a file!"
+		if $verb -eq true ; then
+		   echo "DEBUG: found a file!"
+		fi
 		# its a file.. try to play it!
 		playfile "$1" $2
 	else
-		echo "DEBUG: $1 its something else!"
-		# its not a directory, and its not a file.. :P
-		echo "PiFMPlay cant play that, sorry :("
+		if $verb -eq true ; then
+		   echo "DEBUG: $1 its something else!"
+		   # its not a directory, and its not a file.. :P
+		   echo "PiFMPlay cant play that, sorry :("
+		fi
 	fi
 }
 
